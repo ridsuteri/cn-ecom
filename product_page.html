@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Product Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
+        integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="product_page.css">
+    <script src="product.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mb-4">E-Commerce Product Page</h1>
+
+        <!-- Search and Price Range Filter Section --><!-- Use flexbox for vertical alignment -->
+        <div class="d-flex align-items-center mb-4">
+            <!-- Search input -->
+            <input type="text" id="search" class="form-control mr-3" placeholder="Search for products..."
+                style="flex: 1;">
+
+            <!-- Price range dropdown -->
+            <div class="select-wrapper" style="flex: 0 0 25%;">
+                <select id="price-range" class="form-control">
+                    <option value="">Select Price Range</option>
+                    <option value="0-50">Under $50</option>
+                    <option value="51-100">$51 - $100</option>
+                    <option value="101-200">$101 - $200</option>
+                    <option value="201-300">$201 - $300</option>
+                    <option value="301-500">$301 - $500</option>
+                    <option value="500-1000">$500 - $1000</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="product-list" class="row"></div>
+
+    </div>
+
+</body>
+
+</html>
