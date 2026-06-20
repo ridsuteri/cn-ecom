@@ -1,3 +1,39 @@
+// const cart = [];
+// [
+// {name: product1Name, description: product1Description, quantity: 1},
+// {name: product2Name, description: product2escription, quantity: 1},
+// ]
+
+async function fetchJson() {
+  try {
+    const response = await fetch("./products.json");
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    throw new Error("error fetching products");
+  }
+}
+
+
+function addToCart(e) {
+    const selectedProduct = JSON.parse(e.target?.getAttribute('data-product'));
+    // get the closest sibling for this element
+    const selectedCard = e.target.closest('.card-body')
+    const quantity = parseInt(selectedCard.querySelector('.quantity-input').value);
+
+    const cartItems = localStorage.getItem('cart');
+    console.log(cartItems);
+
+    // 1. now we have the existing state of cart with us
+    // 2. find if the current product already exists 
+    // 3. if yes, simply make the quantity = existing + current
+    // 4. if not, simply append this product to cart
+
+    // localStorage.setItem('cart', JSON.stringify([{...selectedProduct, quantity}]))
+
+}
+
+
 (async function init() {
   const productContainer = document.querySelector("#product-list");
 
@@ -30,22 +66,4 @@
   });
 })();
 
-async function fetchJson() {
-  try {
-    const response = await fetch("./products.json");
-    const data = await response.json();
-    return data;
-  } catch (err) {
-    throw new Error("error fetching products");
-  }
-}
 
-function addToCart(e) {
-    const selectedProduct = JSON.parse(e.target?.getAttribute('data-product'));
-    // get the closest sibling for this element
-    const selectedCard = e.target.closest('.card-body')
-    const quantity = selectedCard.querySelector('.quantity-input').value;
-
-    console.log(selectedProduct)
-    console.log(quantity)
-}
