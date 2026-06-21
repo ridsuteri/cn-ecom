@@ -1,13 +1,18 @@
-const cartContainer = document.querySelector('.cart-items-container');
+const cartContainer = document.querySelector(".cart-items-container");
+const cartTotalValue = document.querySelector('#cart-total-value');
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-const cart = JSON.parse(localStorage.getItem('cart'));
 
-if(cart.length > 0){
+loadCart();
 
-    cart.map((cartItem)=>{
-        const cartItemDiv = document.createElement('div');
-        cartItemDiv.setAttribute('class', 'cart-item');
-        cartItemDiv.innerHTML = `
+
+
+function loadCart() {
+  if (cart.length > 0) {
+    cart.map((cartItem) => {
+      const cartItemDiv = document.createElement("div");
+      cartItemDiv.setAttribute("class", "cart-item");
+      cartItemDiv.innerHTML = `
                <img src="${cartItem.image}" alt="">
                 <div class="cart-item-details">
                     <h3 class="cart-item-title">${cartItem.name}</h3>
@@ -19,9 +24,20 @@ if(cart.length > 0){
                 </div>
         `;
 
-        cartContainer.appendChild(cartItemDiv);
-    })
+      cartContainer.appendChild(cartItemDiv);
+    });
 
-}else{
+    const cartTotal = getCartTotal();
+    cartTotalValue.innerHTML = cartTotal;
+  } else {
     // show cart is empty
+    cartContainer.innerHTML = `<h2>Cart is empty</h2>`;
+  }
+}
+
+function getCartTotal() {
+    const total = cart.reduce((acc, product)=>{
+        return acc += product.price * product.quantity;
+    },0)
+    return total;
 }
