@@ -14,25 +14,39 @@ async function fetchJson() {
   }
 }
 
-
 function addToCart(e) {
-    const selectedProduct = JSON.parse(e.target?.getAttribute('data-product'));
-    // get the closest sibling for this element
-    const selectedCard = e.target.closest('.card-body')
-    const quantity = parseInt(selectedCard.querySelector('.quantity-input').value);
+  // ************* 1. getting selected product
+  const selectedProduct = JSON.parse(e.target?.getAttribute("data-product"));
+  // get the closest sibling for this element
+  const selectedCard = e.target.closest(".card-body");
+  const quantity = parseInt(
+    selectedCard.querySelector(".quantity-input").value
+  );
 
-    const cartItems = localStorage.getItem('cart');
-    console.log(cartItems);
+  // *********** 2. check localStorage cart
+  let updatedCartItems = [];
+  const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // 1. now we have the existing state of cart with us
-    // 2. find if the current product already exists 
-    // 3. if yes, simply make the quantity = existing + current
-    // 4. if not, simply append this product to cart
+  // ********* 3. check if selected product exists or not
+  
+  let productAdded = false;
+  updatedCartItems = cartItems.map((product) => {
+    // if product already existed, just increment the quantity
+    if (product.name === selectedProduct.name) {
+      product.quantity += quantity;
+      productAdded = true;
+    }
+    return product;
+  });
 
-    // localStorage.setItem('cart', JSON.stringify([{...selectedProduct, quantity}]))
+  // if product doesn't exits, simply add the new product along with its quantity
+  if (!productAdded) {
+    updatedCartItems = [...cartItems, { ...selectedProduct, quantity }];
+  }
 
+  // ********** 4. update the cart
+  localStorage.setItem("cart", JSON.stringify(updatedCartItems));
 }
-
 
 (async function init() {
   const productContainer = document.querySelector("#product-list");
@@ -43,14 +57,20 @@ function addToCart(e) {
     productDiv.setAttribute("class", "col-lg-3 col-md-4 col-sm-6 mb-4");
     productDiv.innerHTML = `
                 <div class=" card h-100">
-                    <img src="${product.image}" class="card-img-top" alt="product image">
+                    <img src="${
+                      product.image
+                    }" class="card-img-top" alt="product image">
                      <div class="card-body">
                         <h5 class="card-title">${product.name}</h5>
                         <p class="card-text">${product.description}</p>
-                        <p class="card-text font-weight-bold">${product.price}</p>
+                        <p class="card-text font-weight-bold">${
+                          product.price
+                        }</p>
                         <div class="d-flex align-items-center">
                             <input type="number" class="quantity-input" value="1" min="1">
-                            <a href="#" class="btn btn-primary add-to-cart" data-product='${JSON.stringify(product)}'>Add to Cart</a>
+                            <a href="#" class="btn btn-primary add-to-cart" data-product='${JSON.stringify(
+                              product
+                            )}'>Add to Cart</a>
                         </div>
                     </div>
                 </div>
@@ -65,5 +85,3 @@ function addToCart(e) {
     button.addEventListener("click", addToCart);
   });
 })();
-
-
