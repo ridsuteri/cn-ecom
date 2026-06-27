@@ -15,8 +15,8 @@ function loadCart() {
                     <h3 class="cart-item-title">${cartItem.name}</h3>
                     <p class="cart-item-price">$${cartItem.price}</p>
                     <div class="cart-item-actions">
-                        <input type="number" value="${cartItem.quantity}" min="1" class="quantity-input">
-                        <button class="remove-button">Remove</button>
+                        <input type="number" value="${cartItem.quantity}" min="1" class="quantity-input" data-name="${cartItem.name}">
+                        <button class="remove-button" data-name="${cartItem.name}">Remove</button>
                     </div>
                 </div>
         `;
@@ -49,12 +49,18 @@ function getCartTotal() {
   return total;
 }
 
-function handleQtyChange() {
-    // change the qty in cart
-    // call the loadCart() function again
+function handleQtyChange(event) {
+    const item = cart.find((product) => product.name === event.target.dataset.name);
+    item.quantity = parseInt(event.target.value);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    cartContainer.innerHTML = "";
+    loadCart();
 }
 
-function handleRemove() {
-    // remove the product
-    // call the loadCart() function again
+function handleRemove(event) {
+    const index = cart.findIndex((product) => product.name === event.target.dataset.name);
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    cartContainer.innerHTML = "";
+    loadCart();
 }

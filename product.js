@@ -4,6 +4,8 @@
 // {name: product2Name, description: product2escription, quantity: 1},
 // ]
 
+const productContainer = document.querySelector("#product-list");
+
 async function fetchJson() {
   try {
     const response = await fetch("./products.json");
@@ -48,10 +50,20 @@ function addToCart(e) {
   localStorage.setItem("cart", JSON.stringify(updatedCartItems));
 }
 
-(async function init() {
-  const productContainer = document.querySelector("#product-list");
+function applyFilters(query, min, max){
 
-  const products = await fetchJson();
+  console.log('<<<<FILTERS BEING APPLIED>>>')
+
+  const filteredProducts = window.allProducts.filter((product) =>
+    (product.name.toLowerCase().includes(query) || product.description.toLowerCase().includes(query)) && (product.price >= min && product.price <= max)
+  );
+  displayProducts(filteredProducts);
+
+}
+
+function displayProducts(products){
+
+  productContainer.innerHTML = '';
   products.map((product) => {
     const productDiv = document.createElement("div");
     productDiv.setAttribute("class", "col-lg-3 col-md-4 col-sm-6 mb-4");
@@ -84,4 +96,37 @@ function addToCart(e) {
   buttons.forEach((button) => {
     button.addEventListener("click", addToCart);
   });
+}
+
+(async function init() {
+  const searchBar = document.querySelector('#search');
+  const priceFilter = document.querySelector('#price-range');
+  
+  const debouncedFilter = _.debounce(applyFilters, 200)
+  
+  searchBar.addEventListener('input', ()=>{
+    let min = 0;
+    let max = Infinity;
+    const query = searchBar.value?.toLowerCase();
+    if(priceFilter.value!=''){
+      [min, max] = priceFilter.value?.split('-');
+    }
+
+    debouncedFilter(query, min, max)
+  });
+
+  priceFilter.addEventListener('change', ()=>{
+    let min = 0;
+    let max = Infinity;
+    const query = searchBar.value?.toLowerCase();
+    if(priceFilter.value!=''){
+      [min, max] = priceFilter.value?.split('-');
+    }
+
+    debouncedFilter(query, min, max)
+  })
+
+  window.allProducts = await fetchJson();
+  displayProducts(window.allProducts);
+
 })();
